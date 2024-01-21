@@ -27,7 +27,6 @@ void build_suffix_array(std::string& s, std::vector<int>& suffix_array) {
 	std::sort(suffix_array.begin(), suffix_array.end(), [&](int a, int b) {
 		int l = 0;
 		int r = std::min(s.size() - a, s.size() - b);
-		int max = r;
 		while (l < r - 1) {
 			int mid = (l + r) / 2;
 			if (calc_hash(s.size(), a, a + mid) == calc_hash(s.size(), b, b + mid)) {
