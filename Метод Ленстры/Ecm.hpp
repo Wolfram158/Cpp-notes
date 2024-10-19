@@ -4,7 +4,7 @@
 
 class Lenstra_ECM {
 public:
-    Lenstra_ECM();
+    Lenstra_ECM() = default;
     void factor(mpz_class& n, int B, mpz_class& C);
 private:
     std::vector<int> primes = {2, 3, 5};
@@ -16,20 +16,20 @@ private:
     std::variant<bool, Point> add_points(
         mpz_class& n, 
         mpz_class& a, 
-        Point& point1, 
-        Point& point2
+        std::variant<bool, Point>& point1, 
+        std::variant<bool, Point>& point2
     );
     std::variant<bool, Point> multiply_point(
         mpz_class& n, 
         mpz_class& a, 
-        mpz_class& num, 
-        Point& point
+        long long num, 
+        std::variant<bool, Point>& point
     );
     bool try_ecm(
         mpz_class& n, 
         mpz_class& a, 
         int B, 
-        mpz_class& C, 
+        long long steps, 
         Point& point
     );
 };

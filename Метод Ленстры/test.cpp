@@ -26,6 +26,14 @@ int main() {
     //   mpz_class num = mpz_class(i); 
     //   std::cout << i << " " << is_prime(rr, num, 100) << "\n";
     // }
-    Point p = Point(mpz_class(3), mpz_class(5), true);
-    std::cout << p.get_x() << " " << p.get_y() << " " << p.get_is_o() << "\n";
+    // Point p = Point(mpz_class(3), mpz_class(5), true);
+    // std::cout << p.get_x() << " " << p.get_y() << " " << p.get_is_o() << "\n";
+    // mpz_class z = mpz_class("9099999999999999999099999999999999999999");
+    // mpf_class n = mpf_class(z, 1000);
+    // mpf_class u = floor(sqrt(n));
+    // u.set_prec(100000);
+    mpz_class z = mpz_class(-24);
+    mpz_class t = mpz_class(-40);
+    auto res = extended_euclid(z, t);
+    std::cout << std::get<0>(res) << " " << std::get<1>(res) << " " << std::get<2>(res) << "\n";
 }
