@@ -2,6 +2,14 @@
 #include <random>
 #include <iostream> 
 #include <Ecm.cpp>
+#include <thread> 
+
+void solve(Lenstra_ECM ecm) {
+  mpz_class C = mpz_class("10000000000");
+  mpz_class n = mpz_class("258201039002499283020763059998770852617721519");
+  ecm.factor(n, 200000, C);
+  std::cout << ecm.get_result() << "\n";
+}
 
 int main() {
   // mpz_t x;
@@ -36,8 +44,26 @@ int main() {
     // auto res = extended_euclid(z, t);
     // std::cout << std::get<0>(res) << " " << std::get<1>(res) << " " << std::get<2>(res) << "\n";
     auto ecm = Lenstra_ECM();
-    mpz_class n = mpz_class("87178204020795979291199");
-    mpz_class C = mpz_class("1000000000");
-    ecm.factor(n, 100000, C);
-    std::cout << ecm.get_result() << "\n";
+    // mpz_class n = mpz_class("18889465931478580876729");
+    // mpz_class C = mpz_class("1000000000");
+    // ecm.factor(n, 100000, C);
+    // std::cout << ecm.get_result() << "\n";
+    std::thread th1(solve, ecm);
+    std::thread th2(solve, ecm);
+    std::thread th3(solve, ecm);
+    std::thread th4(solve, ecm);
+    std::thread th5(solve, ecm);
+    std::thread th6(solve, ecm);
+    std::thread th7(solve, ecm);
+    std::thread th8(solve, ecm);
+    std::thread th9(solve, ecm);
+    th1.join();
+    th2.join();
+    th3.join();
+    th4.join();
+    th5.join();
+    th6.join();
+    th7.join();
+    th8.join();
+    th9.join();
 }
