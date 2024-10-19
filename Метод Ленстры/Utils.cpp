@@ -76,14 +76,14 @@ bool is_prime(gmp_randclass& rr, mpz_class& n, int steps) {
     return true;
 }
 
-long long log(mpz_class& C) {
+long long log(mpz_class& C, long long num) {
     mpf_class cf = mpf_class(C);
     mpz_class one = mpz_class(1);
-    mpz_class to_log = C + mpz_class(floor(sqrt(cf))) + one;
+    mpz_class to_log = C + 2 * mpz_class(floor(sqrt(cf))) + 1;
     long long deg = 0;
     while (one < to_log) {
         deg += 1;
-        one *= 2;
+        one *= mpz_class((int) num);
     }
     return deg;
 }

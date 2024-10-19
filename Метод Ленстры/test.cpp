@@ -1,8 +1,7 @@
 #include <gmpxx.h>
 #include <random>
 #include <iostream> 
-#include <Utils.cpp>
-#include <Point.cpp>
+#include <Ecm.cpp>
 
 int main() {
   // mpz_t x;
@@ -32,8 +31,13 @@ int main() {
     // mpf_class n = mpf_class(z, 1000);
     // mpf_class u = floor(sqrt(n));
     // u.set_prec(100000);
-    mpz_class z = mpz_class(-24);
-    mpz_class t = mpz_class(-40);
-    auto res = extended_euclid(z, t);
-    std::cout << std::get<0>(res) << " " << std::get<1>(res) << " " << std::get<2>(res) << "\n";
+    // mpz_class z = mpz_class(5);
+    // mpz_class t = mpz_class(3);
+    // auto res = extended_euclid(z, t);
+    // std::cout << std::get<0>(res) << " " << std::get<1>(res) << " " << std::get<2>(res) << "\n";
+    auto ecm = Lenstra_ECM();
+    mpz_class n = mpz_class("87178204020795979291199");
+    mpz_class C = mpz_class("1000000000");
+    ecm.factor(n, 100000, C);
+    std::cout << ecm.get_result() << "\n";
 }
