@@ -94,17 +94,24 @@ int main(int argc, char* argv[]) {
     int B = 200000;
     mpz_class C = mpz_class(10000000);
     mpz_class n = mpz_class("235928351012000155533311111133333333");
-    // mpz_class n = mpz_class("258201039002499283020763059998770852617721519");
-    // mpz_class n = mpz_class("29582395193111127373737311121212121");
-    // mpz_class n = mpz_class("295823951931111273737373111212121211221");
-    // mpz_class n = mpz_class("295823951931111273737373111212121211221212121");
-    // mpz_class n = mpz_class("2958239519311112737373731112121212112212121212121");
-    // mpz_class n = mpz_class("973895488946806697397832708035027090186481661");
-    // mpz_class n = mpz_class("102401151515151515151515151515151515151515151515");
-    // mpz_class n = mpz_class("10240115151515151515151515151515151515151515151515");
-    // mpz_class n = mpz_class("1024011515151515151515151515151515151515151515151515");
-    // mpz_class n = mpz_class("1024011515151515151515151515151515151515151515151515151515");
+    std::vector<mpz_class> examples;
+    examples.push_back(mpz_class("235928351012000155533311111133333333"));
+    examples.push_back(mpz_class("258201039002499283020763059998770852617721519"));
+    examples.push_back(mpz_class("29582395193111127373737311121212121"));
+    examples.push_back(mpz_class("295823951931111273737373111212121211221"));
+    examples.push_back(mpz_class("295823951931111273737373111212121211221212121"));
+    examples.push_back(mpz_class("2958239519311112737373731112121212112212121212121"));
+    examples.push_back(mpz_class("973895488946806697397832708035027090186481661"));
+    examples.push_back(mpz_class("102401151515151515151515151515151515151515151515"));
+    examples.push_back(mpz_class("10240115151515151515151515151515151515151515151515"));
+    examples.push_back(mpz_class("1024011515151515151515151515151515151515151515151515"));
+    examples.push_back(mpz_class("1024011515151515151515151515151515151515151515151515151515"));
+    examples.push_back(mpz_class("15151515151515151515151515151515151515"));
+    examples.push_back(mpz_class("1515151515151515151515151515151515151515151515"));
+    examples.push_back(mpz_class("316343013244102577022636990019897602752593577"));
+    examples.push_back(mpz_class("31634331111111111111111111111111111"));
     bool fully = false;
+    bool example = false;
     for (int i = 1; i < argc; i++) {
         if (std::strcmp(argv[i], "--threads") == 0 && i < argc - 1) {
             try {
@@ -140,6 +147,23 @@ int main(int argc, char* argv[]) {
         }
         if (std::strcmp(argv[i], "--fully") == 0) {
             fully = true;
+        }
+        if (std::strcmp(argv[i], "--example") == 0) {
+            example = true;
+        }
+    }
+    if (example) {
+        while (true) {
+            std::cout << "Choose one of the following examples:\n";
+            for (std::vector<mpz_class>::size_type i = 1; i < examples.size() + 1; i++) {
+                std::cout << "(" << i << ")" << " " << examples[i - 1] << "\n";
+            }
+            std::vector<mpz_class>::size_type where;
+            std::cin >> where;
+            if (where >= 0 && where - 1 < examples.size()) {
+                n = examples[where - 1];
+                break;
+            }
         }
     }
     if (!fully) {
