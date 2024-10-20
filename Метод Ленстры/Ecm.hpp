@@ -8,11 +8,12 @@ public:
     Lenstra_ECM();
     void factor(mpz_class& n, int B, mpz_class& C);
     mpz_class get_result();
+    void set_uncompletness();
 private:
-    std::vector<int> primes = {2, 3, 5};
-    mpz_class n = 4;
-    mpz_class result = 2;
-    int B = 5;
+    std::vector<int> primes;
+    mpz_class n;
+    mpz_class result;
+    int B;
     std::mutex mtx;
     std::atomic<bool> complete;
 

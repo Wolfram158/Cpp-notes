@@ -3,6 +3,14 @@
 
 Lenstra_ECM::Lenstra_ECM() {
     complete = false;
+    primes = {2, 3, 5};
+    n = 4;
+    result = 2;
+    B = 5;
+}
+
+void Lenstra_ECM::set_uncompletness() {
+    complete = false;
 }
 
 mpz_class Lenstra_ECM::get_result() {
