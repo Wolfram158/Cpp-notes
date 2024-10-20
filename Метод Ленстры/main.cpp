@@ -88,13 +88,7 @@ std::multiset<mpz_class> factor_fully(
 //     }
 // }
 
-int main(int argc, char* argv[]) {
-    auto ecm = Lenstra_ECM();
-    int n_threads = 8;
-    int B = 200000;
-    mpz_class C = mpz_class(10000000);
-    mpz_class n = mpz_class("235928351012000155533311111133333333");
-    std::vector<mpz_class> examples;
+void add_examples(std::vector<mpz_class>& examples) {
     examples.push_back(mpz_class("235928351012000155533311111133333333"));
     examples.push_back(mpz_class("258201039002499283020763059998770852617721519"));
     examples.push_back(mpz_class("29582395193111127373737311121212121"));
@@ -110,6 +104,16 @@ int main(int argc, char* argv[]) {
     examples.push_back(mpz_class("1515151515151515151515151515151515151515151515"));
     examples.push_back(mpz_class("316343013244102577022636990019897602752593577"));
     examples.push_back(mpz_class("31634331111111111111111111111111111"));
+}
+
+int main(int argc, char* argv[]) {
+    auto ecm = Lenstra_ECM();
+    int n_threads = 8;
+    int B = 200000;
+    mpz_class C = mpz_class(10000000);
+    mpz_class n = mpz_class("235928351012000155533311111133333333");
+    std::vector<mpz_class> examples;
+    add_examples(examples);
     bool fully = false;
     bool example = false;
     for (int i = 1; i < argc; i++) {
