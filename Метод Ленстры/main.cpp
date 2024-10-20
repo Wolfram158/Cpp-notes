@@ -3,6 +3,8 @@
 #include <random>
 #include <iostream> 
 #include <set>
+// #include <functional>
+#include <string>
 #include <thread> 
 
 void solve(
@@ -71,12 +73,84 @@ std::multiset<mpz_class> factor_fully(
     return mset;
 }
 
-int main() {
+// template <typename T>
+// void consider_option(
+//     std::string& option, 
+//     std::string& current, 
+//     std::string& val,
+//     T& where, 
+//     std::function<void(T&, T)> set, 
+//     std::function<T(std::string&)> convert
+// ) {
+//     if (option == current) {
+//         T val1 = convert(val);
+//         set(where, val1);
+//     }
+// }
+
+int main(int argc, char* argv[]) {
     auto ecm = Lenstra_ECM();
+    int n_threads = 8;
     int B = 200000;
     mpz_class C = mpz_class(10000000);
+    mpz_class n = mpz_class("235928351012000155533311111133333333");
     // mpz_class n = mpz_class("258201039002499283020763059998770852617721519");
-    // mpz_class n = mpz_class("235928351012000155533311111133333333");
+    // mpz_class n = mpz_class("29582395193111127373737311121212121");
+    // mpz_class n = mpz_class("295823951931111273737373111212121211221");
+    // mpz_class n = mpz_class("295823951931111273737373111212121211221212121");
+    // mpz_class n = mpz_class("2958239519311112737373731112121212112212121212121");
+    // mpz_class n = mpz_class("973895488946806697397832708035027090186481661");
+    // mpz_class n = mpz_class("102401151515151515151515151515151515151515151515");
+    // mpz_class n = mpz_class("10240115151515151515151515151515151515151515151515");
+    // mpz_class n = mpz_class("1024011515151515151515151515151515151515151515151515");
+    // mpz_class n = mpz_class("1024011515151515151515151515151515151515151515151515151515");
+    bool fully = false;
+    for (int i = 1; i < argc; i++) {
+        if (std::strcmp(argv[i], "--threads") == 0 && i < argc - 1) {
+            try {
+                n_threads = std::stoi(argv[i + 1]);
+            } catch (std::invalid_argument& e) {
+                std::cout << "Wrong input of --threads option" << "\n";
+                return 1;
+            }
+        }
+        if (std::strcmp(argv[i], "--B") == 0 && i < argc - 1) {
+            try {
+                B = std::stoi(argv[i + 1]);
+            } catch (std::invalid_argument& e) {
+                std::cout << "Wrong input of --B option" << "\n";
+                return 1;
+            }
+        }
+        if (std::strcmp(argv[i], "--С") == 0 && i < argc - 1) {
+            try {
+                C = mpz_class(argv[i + 1]);
+            } catch (std::invalid_argument& e) {
+                std::cout << "Wrong input of --C option" << "\n";
+                return 1;
+            }
+        }
+        if (std::strcmp(argv[i], "--n") == 0 && i < argc - 1) {
+            try {
+                n = mpz_class(argv[i + 1]);
+            } catch (std::invalid_argument& e) {
+                std::cout << "Wrong input of --n option" << "\n";
+                return 1;
+            }
+        }
+        if (std::strcmp(argv[i], "--fully") == 0) {
+            fully = true;
+        }
+    }
+    if (!fully) {
+        mpz_class result = factor(ecm, n_threads, C, B, n);
+        if (result == -1) {
+            std::cout << n << "\n";
+        } else {
+            std::cout << result << "\n";
+        }
+        return 0;
+    }
     std::multiset<mpz_class> prs = factor_fully(ecm, 16, C, B, n);
     mpz_class pr = *prs.begin();
     int deg = 0;

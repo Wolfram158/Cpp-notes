@@ -29,7 +29,8 @@ void eratosthenes(std::vector<int>& primes, int n) {
             m[i] = i;
             primes.push_back(i);
         }
-        for (int j = 0; j < primes.size() && primes[j] <= m[i] && i * primes[j] <= n; j++) {
+        for (int j = 0; j < static_cast<int>(primes.size()) && primes[j] <= m[i] && 
+            i * primes[j] <= n; j++) {
             m[i * primes[j]] = primes[j];
         }
     }
