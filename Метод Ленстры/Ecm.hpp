@@ -1,9 +1,11 @@
 #include <Point.cpp>
 #include <variant>
+#include <atomic>
+#include <mutex>
 
 class Lenstra_ECM {
 public:
-    Lenstra_ECM() = default;
+    Lenstra_ECM();
     void factor(mpz_class& n, int B, mpz_class& C);
     mpz_class get_result();
 private:
@@ -11,6 +13,8 @@ private:
     mpz_class n = 4;
     mpz_class result = 2;
     int B = 5;
+    std::mutex mtx;
+    std::atomic<bool> complete;
 
     bool is_not_satisfied(gmp_randclass& rr, mpz_class& m);
     std::variant<bool, Point> add_points(

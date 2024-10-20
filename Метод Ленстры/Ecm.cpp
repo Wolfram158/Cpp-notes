@@ -1,21 +1,25 @@
 #include <Ecm.hpp>
 #include <cmath>
 
+Lenstra_ECM::Lenstra_ECM() {
+    complete = false;
+}
+
 mpz_class Lenstra_ECM::get_result() {
-    return this->result;
+    return result;
 }
 
 bool Lenstra_ECM::is_not_satisfied(gmp_randclass& rr, mpz_class& m) {
     if (is_prime(rr, m, 100)) {
-        this->result = -1;
+        result = -1;
         return true;
     }
     if (m % 2 == 0) {
-        this->result = 2;
+        result = 2;
         return true;
     }
-    if (m % 2 == 0) {
-        this->result = 3;
+    if (m % 3 == 0) {
+        result = 3;
         return true;
     }
     return false;
@@ -27,18 +31,18 @@ std::variant<bool, Point> Lenstra_ECM::multiply_point(
     long long num, 
     std::variant<bool, Point>& point
 ) {
-    long long steps = (long long) std::log2((double) num);
+    long long steps = static_cast<long long>(std::log2(static_cast<double>(num)));
     std::variant<bool, Point> result = Point(0, 0, true);
     std::variant<bool, Point> current_pow = point;
     for (long long i = 0; i < steps + 1; i++) {
         if (num % 2 == 1) {
-            result = this->add_points(n, a, result, current_pow);
+            result = add_points(n, a, result, current_pow);
             if (std::holds_alternative<bool>(result)) {
                 return false;
             }
         }
         num /= 2;
-        current_pow = this->add_points(n, a, current_pow, current_pow);
+        current_pow = add_points(n, a, current_pow, current_pow);
         if (std::holds_alternative<bool>(current_pow)) {
                 return false;
         }
@@ -77,7 +81,7 @@ std::variant<bool, Point> Lenstra_ECM::add_points(
                 std::tuple<mpz_class, mpz_class, mpz_class> gcds = extended_euclid(input, n);
                 mpz_class gcd = std::get<0>(gcds);
                 if (gcd != 1 && gcd != n) {
-                    this->result = gcd;
+                    result = gcd;
                     return false;
                 } 
                 auto inverse = std::get<1>(gcds);
@@ -90,7 +94,7 @@ std::variant<bool, Point> Lenstra_ECM::add_points(
         std::tuple<mpz_class, mpz_class, mpz_class> gcds = extended_euclid(input, n);
         mpz_class gcd = std::get<0>(gcds);
         if (gcd != 1 && gcd != n) {
-            this->result = gcd;
+            result = gcd;
             return false;
         }
         mpz_class inverse = std::get<1>(gcds);
@@ -102,7 +106,6 @@ std::variant<bool, Point> Lenstra_ECM::add_points(
     mpz_class x = (alpha * alpha - p1.get_x() - p2.get_x()) % n;
     normalize(x, n);
     mpz_class y = (-(alpha * x + beta)) % n;
-    // std::cout << x << " " << y << " " << " " << beta << " " << alpha << "\n";
     normalize(y, n);
     return Point(x, y);
 }
@@ -115,13 +118,16 @@ bool Lenstra_ECM::try_ecm(
     Point& point
 ) {
     std::variant<bool, Point> Q = point;
-    for (int prime : this->primes) {
+    for (int prime : primes) {
+        if (complete) {
+            return true;
+        }
         if (prime > B) {
             break;
         }
         long long steps = log(C, prime);
         for (int j = 0; j < steps; j++) {
-            Q = this->multiply_point(n, a, prime, Q);
+            Q = multiply_point(n, a, prime, Q);
             if (std::holds_alternative<bool>(Q)) {
                 return true;
             }
@@ -134,21 +140,27 @@ void Lenstra_ECM::factor(mpz_class& n, int B, mpz_class& C) {
     gmp_randclass rr(gmp_randinit_mt);
     std::mt19937 mt{std::random_device{}()};
     rr.seed(mt());
-    if (this->is_not_satisfied(rr, n)) {
+    if (is_not_satisfied(rr, n)) {
         return;
     }
+    mtx.lock();
     if (B > this->B) {
         this->B = B;
         std::vector<int> prims = {};
         eratosthenes(prims, B);
-        this->primes = prims;
+        primes = prims;
     }
+    mtx.unlock();
     while (true) {
+        if (complete) {
+            break;
+        }
         mpz_class a = rr.get_z_range(n);
         mpz_class u = rr.get_z_range(n);
         mpz_class v = rr.get_z_range(n);
         Point point = Point(u, v);
-        if (this->try_ecm(n, a, B, C, point)) {
+        if (try_ecm(n, a, B, C, point)) {
+            complete = true;
             break;
         }
     }
