@@ -3,13 +3,13 @@
 1. Выполнить команду: sudo apt-get install libgmp-dev (для доступа к gmpxx.h)
 2. Выполнить команду, находясь в директории, содержащей файлы проекта: g++ -Wall -pedantic -pthread -std=c++17 -I . main.cpp -o factor -lgmpxx -lgmp
 
-Примеры запуска программы:
-./factor --n 1010
-./factor --n 212415111 --fully
-./factor --fully --B 10000 --C 1000 --n 123123123456711
-./factor --B 1000 --n 1024111111111111111111111 --threads 16
-./factor --example
-./factor --file file_name
+Примеры запуска программы: </br>
+./factor --n 1010 </br>
+./factor --n 212415111 --fully </br>
+./factor --fully --B 10000 --C 1000 --n 123123123456711 </br>
+./factor --B 1000 --n 1024111111111111111111111 --threads 16 </br>
+./factor --example </br>
+./factor --file file_name </br>
 
 Таким образом:
 1. Опция --n позволяет указать число для факторизации (по умолчанию n = 235928351012000155533311111133333333),
