@@ -1,37 +1,28 @@
 #include <gmp.h>
 #include <random>
 
-void extended_euclid(mpz_t& a, mpz_t& b, mpz_t& gcd, mpz_t& inv, mpz_t& x, mpz_t& y, mpz_t& g, mpz_t& r, mpz_t& s, mpz_t& t, mpz_t& q, mpz_t& u, mpz_t& v, mpz_t& w) {
-    // mpz_t x;
-    // mpz_t y;
-    // mpz_t g;
-    // mpz_t r;
-    // mpz_t s;
-    // mpz_t t;
-
-    // mpz_init_set_ui(x, 1);
-    // mpz_init_set_ui(y, 0);
-    // mpz_init_set(g, a);
-    // mpz_init_set_ui(r, 0);
-    // mpz_init_set_ui(s, 1);
-    // mpz_init_set(t, b);
-
+void extended_euclid(
+    mpz_t& a, 
+    mpz_t& b, 
+    mpz_t& gcd, 
+    mpz_t& inv, 
+    mpz_t& x, 
+    mpz_t& y, 
+    mpz_t& g, 
+    mpz_t& r, 
+    mpz_t& s, 
+    mpz_t& t, 
+    mpz_t& q,
+    mpz_t& u, 
+    mpz_t& v, 
+    mpz_t& w
+) {
     mpz_set_si(x, 1);
     mpz_set_si(y, 0);
     mpz_set(g, a);
     mpz_set_si(r, 0);
     mpz_set_si(s, 1);
     mpz_set(t, b);
-
-    // mpz_t q;
-    // mpz_t u;
-    // mpz_t v;
-    // mpz_t w;
-
-    // mpz_init(q);
-    // mpz_init(u);
-    // mpz_init(v);
-    // mpz_init(w);
 
     while (mpz_cmp_si(t, 0) > 0) {
         mpz_fdiv_q(q, g, t);
@@ -54,17 +45,6 @@ void extended_euclid(mpz_t& a, mpz_t& b, mpz_t& gcd, mpz_t& inv, mpz_t& x, mpz_t
 
     mpz_set(gcd, g);
     mpz_set(inv, x);
-
-    // mpz_clear(x);
-    // mpz_clear(y);
-    // mpz_clear(g);
-    // mpz_clear(r);
-    // mpz_clear(s);
-    // mpz_clear(t);
-    // mpz_clear(q);
-    // mpz_clear(u);
-    // mpz_clear(v);
-    // mpz_clear(w);
 }
 
 void eratosthenes(std::vector<int>& primes, int n) {
@@ -95,6 +75,7 @@ void fast_power_mod(mpz_t& a, mpz_t& u, mpz_t& mod, mpz_t& result) {
     mpz_t umod;
     mpz_init(umod);
     mpz_mod_ui(umod, u, 2);
+    mpz_clear(result);
     mpz_mul(result, sqrt, sqrt);
     if (mpz_cmp_ui(umod, 0) == 0) {
         mpz_mod(result, result, mod);
@@ -102,6 +83,9 @@ void fast_power_mod(mpz_t& a, mpz_t& u, mpz_t& mod, mpz_t& result) {
     }
     mpz_mul(result, a, result);
     mpz_mod(result, result, mod);
+    mpz_clear(half);
+    mpz_clear(sqrt);
+    mpz_clear(umod);
 }
 
 struct prev_cur {
@@ -152,7 +136,14 @@ bool is_prime(gmp_randstate_t& state, mpz_t& n, int steps) {
         if (mpz_cmp_ui(x.prev, 1) != 0) {
             return false;
         }
+        mpz_clear(a);
+        mpz_clear(u);
+        mpz_clear(mod);
+        mpz_clear(fst);
+        mpz_clear(x.cur);
+        mpz_clear(x.prev);
     }
+    mpz_clear(n1);
     return true;
 }
 
@@ -170,5 +161,54 @@ long long log(mpz_t& C, long long num) {
         deg += 1;
         mpz_mul_ui(one, one, num);
     }
+    mpz_clear(to_log);
+    mpz_clear(one);
     return deg;
+}
+
+void gcd_(mpz_t& a, mpz_t& b, mpz_t& gcd, mpz_t& inv, mpz_t& u, mpz_t& v, mpz_t& s, mpz_t& t, mpz_t& alpha, mpz_t& beta) {
+    int r = 0;
+    while (mpz_even_p(a) != 0 && mpz_even_p(b) != 0) {
+        mpz_fdiv_q_2exp(a, a, 1);
+        mpz_fdiv_q_2exp(b, b, 1);
+        r += 1;
+    }
+    mpz_set(alpha, a);
+    mpz_set(beta, b);
+    while (mpz_even_p(a) != 0) {
+        mpz_fdiv_q_2exp(a, a, 1);
+        if (mpz_even_p(u) != 0 && mpz_even_p(v) != 0) {
+            mpz_fdiv_q_2exp(u, u, 1);
+            mpz_fdiv_q_2exp(v, v, 1);
+        } else {
+            mpz_add(u, u, beta);
+            mpz_fdiv_q_2exp(u, u, 1);
+            mpz_sub(v, v, alpha);
+            mpz_fdiv_q_2exp(v, v, 1);
+        }
+    }
+    while (mpz_cmp(a, b) != 0) {
+        if (mpz_even_p(b) != 0) {
+            mpz_fdiv_q_2exp(b, b, 1);
+            if (mpz_even_p(s) != 0 && mpz_even_p(t) != 0) {
+                mpz_fdiv_q_2exp(s, s, 1);
+                mpz_fdiv_q_2exp(t, t, 1);
+            } else {
+                mpz_add(s, s, beta);
+                mpz_fdiv_q_2exp(s, s, 1);
+                mpz_sub(t, t, alpha);
+                mpz_fdiv_q_2exp(t, t, 1);
+            } 
+        } else if (mpz_cmp(b, a) < 0) {
+            mpz_swap(a, b);
+            mpz_swap(u, s);
+            mpz_swap(v, t);
+        } else {
+            mpz_sub(b, b, a);
+            mpz_sub(s, s, u);
+            mpz_sub(t, t, v);
+        }
+    }
+    mpz_mul_2exp(gcd, a, r);
+    mpz_set(inv, s);
 }

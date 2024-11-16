@@ -1,11 +1,12 @@
 #include <Utils.cpp>
 #include <atomic>
 #include <mutex>
-#include <gmp.h>
+#include <gmpxx.h>
 
 class Lenstra_ECM {
 public:
     Lenstra_ECM();
+    ~Lenstra_ECM();
     void factor(mpz_t& n, int B, mpz_t& C);
     mpz_t* get_result();
     void set_uncompletness();
